@@ -9,15 +9,15 @@ def configure_routes(app):
 
     this_dir = os.path.dirname(__file__)
     model_path = os.path.join(this_dir, "model.pkl")
-    clf = joblib.load(model_path)
+    dclf = joblib.load(model_path)
 
     @app.route('/')
     def hello():
         return "try the predict route it is great!"
 
-
     @app.route('/predict')
     def predict():
+        # change this fucntion to take json of one or many students and give back one or more G3 scores
         #use entries from the query string here but could also use json
         age = request.args.get('age')
         absences = request.args.get('absences')
@@ -31,3 +31,19 @@ def configure_routes(app):
         query = pd.get_dummies(query_df)
         prediction = clf.predict(query)
         return jsonify(np.asscalar(prediction))
+    
+    @app.route('/train')
+    def train():
+        # take json format data to train a model, data may be 
+        # give back a model, select 
+        return "mock model id"
+    
+    @app.route('/clean')
+    def clean():
+        #cleans the data and prepares it for input to ML
+        return "cleaned data"
+    
+    @app.route('/test')
+    def test():
+        # tests how well the model performs 
+        return "test score"
