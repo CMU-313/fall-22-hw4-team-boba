@@ -1,0 +1,46 @@
+openapi: 3.0.3
+info:
+  version: 1.0.0
+  title: Swagger API Applicant Success Predictor
+  description: |-
+    Predicts whether a student will be high-quality and likely to succeed
+tags:
+  - name: predict
+    description: Predict application success
+paths:
+  /predict/:
+    get:
+      tags:
+        - predict
+      summary: Predict a student's success
+      description: Get the quality of a student based on predicted G3 score
+      operationId: getPredict
+      parameters:
+        - in: query
+          name: absences
+          description: number of absences
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+            maximum: 20
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Predict'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Predict'
+        '400':
+          description: Invalid values supplied
+        '404':
+          description: Values not found
+  /train/:
+  /clean/:
+  /test/:
+components:
+  schemas:
