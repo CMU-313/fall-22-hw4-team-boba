@@ -1,28 +1,74 @@
 openapi: 3.0.3
 info:
   version: 1.0.0
-  title: Swagger API Applicant Success Predictor
+  title: Applicant Success Predictor API
   description: |-
-    Predicts whether a student will be high-quality and likely to succeed
+    Predicts whether a student will be high-quality and likely to succeed.
 tags:
   - name: predict
     description: Predict application success
 paths:
-  /predict/:
-    get:
+  /predict:
+    post:
       tags:
         - predict
-      summary: Predict a student's success
-      description: Get the quality of a student based on predicted G3 score
-      operationId: getPredict
+      summary: Predict a student's success by ID.
+      description: >
+        Using a ML model based on the parameters `studytime`, `failures`,
+        `absences`, `G1`, and `G2`, predict the quality of the student,
+        specifically `G3`. A student predicted to have a `G3` grade of 15 or
+        higher is high-quality.
+      operationId: predict
       parameters:
         - in: query
-          name: absences
-          description: number of absences
+          name: studytime
+          description: >
+            weekly study time (numeric: 1 - <2 hours, 2 - 2 to 5 hours, 
+            3 - 5 to 10 hours, or 4 - >10 hours)
           required: true
           schema:
             type: integer
-            format: int64
+            format: int32
+            minimum: 1
+            maximum: 10
+        - in: query
+          name: failures
+          description: >
+            number of past class failures (numeric: n if 1<=n<3, else 4)
+          required: true
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+            maximum: 4
+        - in: query
+          name: absences
+          description: >
+            number of school absences (numeric: from 0 to 93)
+          required: true
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+            maximum: 93
+        - in: query
+          name: G1
+          description: >
+            first period grade (numeric: from 0 to 20)
+          required: true
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+            maximum: 20
+        - in: query
+          name: G2
+          description: >
+            second period grade (numeric: from 0 to 20)
+          required: true
+          schema:
+            type: integer
+            format: int32
             minimum: 0
             maximum: 20
       responses:
@@ -39,8 +85,71 @@ paths:
           description: Invalid values supplied
         '404':
           description: Values not found
-  /train/:
+  /train:
+    post:
+      summary: Train the student success predicting ML model.
+      description: >
+        Train the ML model over a historical dataset (/data/student-mat.csv) of
+        student performance. Our ML model uses 5 inputs from the dataset: 
+        `studytime`, `failures`, `absences`, `G1`, and `G2`. The target 
+        performance metric of our model is `G3`. The data is in JSON format.
+      operationId: train
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Predict'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Predict'
   /clean/:
+    post:
+      summary: Clean the dataset in preparation to train the ML model.
+      description: >
+        Before training our ML model on a dataset, we should clean the data.
+        Remove corrupt, incorrect, or unnecessary data from the dataset 
+        (/data/student-mat.csv), so that our ML model will have greater success.
+      operationId: clean
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Predict'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Predict'
   /test/:
+    post:
+      summary: Test how the ML model performs.
+      description: >
+        Run tests to test the classifier accuracy of our ML model.
+      operationId: test
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Predict'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Predict'
 components:
   schemas:
+    Predict:
+      type: object
+      properties:
+        studytime:
+          type: integer
+        failures:
+          type: integer
+        absences:
+          type: integer
+        G1:
+          type: integer
+        G2:
+          type: integer
