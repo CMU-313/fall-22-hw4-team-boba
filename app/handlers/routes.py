@@ -28,16 +28,24 @@ def configure_routes(app):
 
     @app.route('/predict')
     def predict():
-        # change this fucntion to take json of one or many students and give back one or more G3 scores
-        #use entries from the query string here but could also use json
-        age = request.args.get('age')
+        # Planned modifications for next part of Hw4: 
+        #   - change this fucntion to take json of one or many students and give back one or more G3 scores
+        #   - use entries from the query string here but could also use json
+        # Below function only implemented in case of prediction on one student
+        # instead of multiple. Multiple student implementation will hold in 
+        # next homework. 
+        g1 = request.args.get('G1')
         absences = request.args.get('absences')
-        health = request.args.get('health')
-        data = [[age], [health], [absences]]
+        g2 = request.args.get('G2')
+        studytime = request.args.get('studytime')
+        failures = request.args.get('failures')
+        data = [[g1], [g2], [absences],[studytime],[failures]]
         query_df = pd.DataFrame({
-            'age': pd.Series(age),
-            'health': pd.Series(health),
-            'absences': pd.Series(absences)
+            'G1': pd.Series(g1),
+            'G2': pd.Series(g2),
+            'absences': pd.Series(absences),
+            'studytime': pd.Series(studytime),
+            'failures': pd.Series(failures)
         })
         query = pd.get_dummies(query_df)
         prediction = clf.predict(query)
