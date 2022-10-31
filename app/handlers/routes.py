@@ -15,6 +15,17 @@ def configure_routes(app):
     def hello():
         return "try the predict route it is great!"
 
+    @app.route('/clean')
+    def clean():
+        #cleans the data and prepares it for input to ML
+        return "cleaned data"
+
+    @app.route('/train')
+    def train():
+        # take json format data to train a model, data may be 
+        # give back a model, select 
+        return "mock model id"
+
     @app.route('/predict')
     def predict():
         # change this fucntion to take json of one or many students and give back one or more G3 scores
@@ -31,17 +42,6 @@ def configure_routes(app):
         query = pd.get_dummies(query_df)
         prediction = clf.predict(query)
         return jsonify(np.asscalar(prediction))
-    
-    @app.route('/train')
-    def train():
-        # take json format data to train a model, data may be 
-        # give back a model, select 
-        return "mock model id"
-    
-    @app.route('/clean')
-    def clean():
-        #cleans the data and prepares it for input to ML
-        return "cleaned data"
     
     @app.route('/test')
     def test():
