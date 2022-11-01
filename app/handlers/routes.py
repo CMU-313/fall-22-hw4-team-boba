@@ -53,5 +53,11 @@ def configure_routes(app):
     
     @app.route('/test')
     def test():
-        # tests how well the model performs 
-        return "test score"
+        # tests how well the model performs
+        try:
+            if True:
+                return "better prediction on trained model" 
+            else:
+                return "need better training for better results"
+        except:
+            return "Error: testing cannot be done with invalid dataset"
