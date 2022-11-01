@@ -19,58 +19,52 @@ paths:
         specifically `G3`. A student predicted to have a `G3` grade of 15 or
         higher is high-quality.
       operationId: predict
-      parameters:
-        - in: query
-          name: studytime
-          description: >
-            weekly study time (numeric: 1 - <2 hours, 2 - 2 to 5 hours, 
-            3 - 5 to 10 hours, or 4 - >10 hours)
-          required: true
-          schema:
-            type: integer
-            format: int32
-            minimum: 1
-            maximum: 10
-        - in: query
-          name: failures
-          description: >
-            number of past class failures (numeric: n if 1<=n<3, else 4)
-          required: true
-          schema:
-            type: integer
-            format: int32
-            minimum: 1
-            maximum: 4
-        - in: query
-          name: absences
-          description: >
-            number of school absences (numeric: from 0 to 93)
-          required: true
-          schema:
-            type: integer
-            format: int32
-            minimum: 0
-            maximum: 93
-        - in: query
-          name: G1
-          description: >
-            first period grade (numeric: from 0 to 20)
-          required: true
-          schema:
-            type: integer
-            format: int32
-            minimum: 0
-            maximum: 20
-        - in: query
-          name: G2
-          description: >
-            second period grade (numeric: from 0 to 20)
-          required: true
-          schema:
-            type: integer
-            format: int32
-            minimum: 0
-            maximum: 20
+      requestBody:
+        description: Requires input of array of JSON objects, where each object in array is a student's data
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                properties:
+                  studytime:
+                    type: integer
+                    format: int32
+                    minimum: 1
+                    maximum: 10
+                    description: >
+                      weekly study time (numeric: 1 - <2 hours, 2 - 2 to 5 hours, 
+                      3 - 5 to 10 hours, or 4 - >10 hours)
+                  failures:
+                    type: integer
+                    format: int32
+                    minimum: 1
+                    maximum: 4
+                    description: >
+                      number of past class failures (numeric: n if 1<=n<3, else 4)
+                  absences:
+                    type: integer
+                    format: int32
+                    minimum: 0
+                    maximum: 93
+                    description: >
+                      number of school absences (numeric: from 0 to 93)
+                  G1:
+                    type: integer
+                    format: int32
+                    minimum: 0
+                    maximum: 20
+                    description: >
+                      first period grade (numeric: from 0 to 20)
+                  G2:
+                    type: integer
+                    format: int32
+                    minimum: 0
+                    maximum: 20
+                    description: >
+                      second period grade (numeric: from 0 to 20)
       responses:
         '200':
           description: successful operation
