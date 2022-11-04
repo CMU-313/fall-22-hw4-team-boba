@@ -9,7 +9,7 @@ def configure_routes(app):
 
     this_dir = os.path.dirname(__file__)
     model_path = os.path.join(this_dir, "model.pkl")
-    dclf = joblib.load(model_path)
+    clf = joblib.load(model_path)
 
     @app.route('/')
     def hello():
