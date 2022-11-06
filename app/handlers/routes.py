@@ -5,10 +5,13 @@ import pandas as pd
 import numpy as np
 import os
 
+
 def configure_routes(app):
 
     this_dir = os.path.dirname(__file__)
     model_path = os.path.join(this_dir, "model.pkl")
+    parent = os.path.dirname(os.getcwd())
+    d_path = os.path.join(parent,"data")
     clf = joblib.load(model_path)
 
     @app.route('/')
@@ -17,7 +20,24 @@ def configure_routes(app):
 
     @app.route('/clean')
     def clean():
-        #cleans the data and prepares it for input to ML
+        data_path = os.path.join(d_path,"student-mat.csv")
+        cleaned_path = os.path.join(d_path,"cleaned-student.csv")
+
+        # cleans the data and prepares it for input to ML
+        data = pd.read_csv(data_path, sep=';')
+
+        # copy from the original csv dataset to avoid overwriting
+        copied = data.copy()
+
+        # delete any duplicate rows in-place
+        copied.drop_duplicates(subset=None, inplace=True)
+
+        # fill in any null values found in the dataset to the mean value of
+        # each column
+        copied.fillna(np.around(copied.mean(), decimals=2), inplace=True)
+
+        copied.to_csv(cleaned_path)
+
         return "cleaned data"
 
     @app.route('/train')
