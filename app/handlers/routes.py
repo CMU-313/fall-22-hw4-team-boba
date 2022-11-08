@@ -54,11 +54,12 @@ def configure_routes(app):
         # Below function only implemented in case of prediction on one student
         # instead of multiple. Multiple student implementation will hold in 
         # next homework. 
-        g1 = request.args.get('G1')
-        absences = request.args.get('absences')
-        g2 = request.args.get('G2')
-        studytime = request.args.get('studytime')
-        failures = request.args.get('failures')
+        print(request.args.get('G1'))
+        g1 = int(request.args.get('G1'))
+        absences = int(request.args.get('absences'))
+        g2 = int(request.args.get('G2'))
+        studytime = int(request.args.get('studytime'))
+        failures = int(request.args.get('failures'))
         data = [[g1], [g2], [absences],[studytime],[failures]]
         query_df = pd.DataFrame({
             'G1': pd.Series(g1),
@@ -69,7 +70,7 @@ def configure_routes(app):
         })
         query = pd.get_dummies(query_df)
         prediction = clf.predict(query)
-        return jsonify(np.asscalar(prediction))
+        return jsonify(np.ndarray.item(prediction))
     
     @app.route('/test')
     def test():

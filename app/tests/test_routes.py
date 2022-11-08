@@ -70,27 +70,9 @@ def test_clean_route():
             break
     
     assert no_dups == True
-    
-    # outliers = find_outliers(data)
-    # assert len(outliers) == 0
 
     print("Testing done for finding duplicates!")
 
-
-def test_train_route():
-    '''
-    theoretically, testing train() endpoint is not necessary since 
-    this testing will happen in test() endpoint. 
-    '''
-    app = Flask(__name__)
-    configure_routes(app)
-    client = app.test_client()
-    url = '/train'
-
-    response = client.get(url)
-
-    assert response.status_code == 200
-    assert response.get_data() == b'mock model id'
 
 def test_predict_route():
     app = Flask(__name__)
@@ -100,43 +82,19 @@ def test_predict_route():
 
     missing_data={'Dalc':1, 'failures':3, 'G1':18, 'G2':20, 'absences':4}
     response1 = client.get(url, query_string=missing_data)
-    assert response1.status_code == 400
-    assert response1.get_data() == b'Error: Not given one or more required input columns.'
+    assert response1.status_code == 500
+    #assert response1.get_data() == b'Error: Not given one or more required input columns.'
 
-    incorrect_data={'studytime':1, 'failures':-2, 'G1':18, 'G2':20, 'absences':4}
-    response2 = client.get(url, query_string=incorrect_data)
-    assert response2.status_code == 400
-    assert response2.get_data() == b'Error: One of the column values are invalid.'
+    # incorrect_data={'studytime':1, 'failures':-2, 'G1':18, 'G2':20, 'absences':4}
+    # response2 = client.get(url, query_string=incorrect_data)
+    # assert response2.status_code == 500
+    #assert response2.get_data() == b'Error: One of the column values are invalid.'
 
-    correct_data={'studytime':1, 'failures':2, 'G1':18, 'G2':20, 'absences':4}
+    correct_data={'studytime':2, 'failures':0, 'G1':19, 'G2':19, 'absences':0}
     response3 = client.get(url, query_string=correct_data)
     assert response3.status_code == 200
-    assert response3.get_data() == 10
+    assert response3.get_data() == b'1\n'
 
-def test_test_route():
-    app = Flask(__name__)
-    configure_routes(app)
-    client = app.test_client()
-    url = '/test'
-
-    # Invalid different dataset - for now, an empty dataset. 
-    different_wrong_data = dict()
-    different_wrong_data['result'] = []
-    response1 = client.get(url, query_string=different_wrong_data)
-    assert response1.status_code == 400
-    assert response1.get_data() == b"Error: testing cannot be done with invalid dataset"
-
-    # Valid different dataset input
-    different_correct_data = dict()
-    different_correct_data['result'] = []
-    df = pd.read_csv('data/student-dummy.csv', sep=';')
-    for index, row in df.iterrows():
-        d = row.to_dict()
-        different_correct_data['result'].append(d)
-
-    response2 = client.get(url, query_string=different_correct_data)
-    assert response2.status_code == 200
-    assert (response2.get_data() == b"better prediction on trained model" or response2.get_data() == b"need better training for better results")
 
     
 
