@@ -16,64 +16,6 @@ def test_base_route():
     assert response.status_code == 200
     assert response.get_data() == b'try the predict route it is great!'
 
-# Helper function to find outliers.  
-def find_outliers(df):
-   q1=df.quantile(0.25)
-   q3=df.quantile(0.75)
-   iqr=q3-q1
-
-   detected = df[((df<(q1-1.5*iqr)) | (df>(q3+1.5*iqr)))]
-
-   return detected
-
-def test_clean_route():
-    '''
-    Checking if the clean() endpoint got rid of duplicate data, null data, and 
-    possible outliers. 
-    For checking whether or not the outliers were cleaned up, it requires 
-    extensive techniques like Z-score or IQR(Interquartile Range). 
-    For this testing, we will use IQR to determine the outliers for simplicity. 
-    '''
-    app = Flask(__name__)
-    configure_routes(app)
-    client = app.test_client()
-    parent = os.path.dirname(os.getcwd())
-    d_path = os.path.join(parent,"data")
-
-    url = '/clean'
-
-    response = client.get(url)
-
-    assert response.status_code == 200
-    assert response.get_data() == b'cleaned data'
-
-    data_path = os.path.join(d_path,"cleaned-student.csv")
-    data = pd.read_csv(data_path, sep=';')
-
-    no_null = True 
-    nulls = data.isnull()
-    for r in range(len(nulls)):
-        rowlst = list(nulls.loc[r])
-        for i in range(len(rowlst)):
-            if rowlst[i] == True:
-                no_null = False
-                break 
-    
-    
-    # Testing no null data should return True if cleaned correctly
-    assert no_null == True
-    
-    no_dups = True 
-    for (c, v) in data.duplicated().iteritems():
-        if v == True:
-            no_dups = False 
-            break
-    
-    assert no_dups == True
-
-    print("Testing done for finding duplicates!")
-
-
 def test_predict_route():
     app = Flask(__name__)
     configure_routes(app)
