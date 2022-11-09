@@ -1,6 +1,7 @@
 from flask import Flask
 import pandas as pd
 import os
+import sys
 
 from app.handlers.routes import configure_routes
 
@@ -36,20 +37,21 @@ def test_predict_route():
         {'G1': 20, 'G2': 8, 'studytime': 2, 'failures': 4, 'absences': 94}] # absences
     for query in invalid_data_queries:
         invalid = client.get(url, query_string=query)
-        assert invalid.status_code == 500        
+        assert invalid.status_code == 400     
+        print(invalid.get_data())
+        sys.stdout.flush()
         
-    #assert response1.get_data() == b'Error: Not given one or more required input columns.'
-
-    # incorrect_data={'studytime':1, 'failures':-2, 'G1':18, 'G2':20, 'absences':4}
-    # response2 = client.get(url, query_string=incorrect_data)
-    # assert response2.status_code == 500
-    #assert response2.get_data() == b'Error: One of the column values are invalid.'
-
-    # success test
+    # success test good student
     correct_data={'studytime':2, 'failures':1, 'G1':19, 'G2':19, 'absences':0}
     response3 = client.get(url, query_string=correct_data)
     assert response3.status_code == 200
     assert response3.get_data() == b'1\n'
+    
+    # success test not good student
+    correct_data={'studytime':1, 'failures':3, 'G1':6, 'G2':9, 'absences':17}
+    response3 = client.get(url, query_string=correct_data)
+    assert response3.status_code == 200
+    assert response3.get_data() == b'0\n'
 
 
     

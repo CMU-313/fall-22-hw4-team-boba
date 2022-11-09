@@ -29,11 +29,20 @@ def configure_routes(app):
         #data = [[g1], [g2], [absences],[studytime],[failures]]
         
         # validate data
-        assert(g1 in range(0, 20)) # (numeric: from 0 to 20)
-        assert(g2 in range(0, 20))# (numeric: from 0 to 20)
-        assert(studytime in range(1, 4)) # (numeric: 1 - <2 hours, 2 - 2 to 5 hours, 3 - 5 to 10 hours, or 4 - >10 hours)
-        assert(failures in range(1, 4)) # (numeric: n if 1<=n<3, else 4)
-        assert(absences in range(0, 93)) # (numeric: from 0 to 93)
+        invalid = ''
+        if (g1 not in range(0, 20)): # (numeric: from 0 to 20)
+            invalid = 'G1'
+        if (g2 not in range(0, 20)): # (numeric: from 0 to 20)
+            invalid = 'G2'
+        if (studytime not in range(1, 4)): # (numeric: 1 - <2 hours, 2 - 2 to 5 hours, 3 - 5 to 10 hours, or 4 - >10 hours)
+            invalid = 'studytime'
+        if (failures not in range(1, 4)): # (numeric: n if 1<=n<3, else 4)
+            invalid = 'failures'
+        if (absences not in range(0, 93)): # (numeric: from 0 to 93)
+            invalid = 'absences'
+        
+        if (invalid != ''):
+            return invalid + ' is not in valid range!', 400
         
         # load data into query_df
         query_df = pd.DataFrame({
