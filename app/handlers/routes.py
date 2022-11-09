@@ -5,6 +5,7 @@ import pandas as pd
 import numpy as np
 import os
 
+
 def configure_routes(app):
     # load model from 'database'
     this_dir = os.path.dirname(__file__)
@@ -56,6 +57,6 @@ def configure_routes(app):
         # set query and run predict ML
         query = pd.get_dummies(query_df)
         prediction = clf.predict(query)
-        
+
         return jsonify(np.ndarray.item(prediction))
     

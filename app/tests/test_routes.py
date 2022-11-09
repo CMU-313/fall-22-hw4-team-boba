@@ -53,6 +53,5 @@ def test_predict_route():
     assert response3.status_code == 200
     assert response3.get_data() == b'0\n'
 
-
     
 
