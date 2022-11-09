@@ -1,5 +1,22 @@
 # HW4 Starter Code and Instructions
 
+## (Updated) Features Used to Train Model
+
+| Attribute | Description                                                                                      | Justification                                                                                                           |
+|-----------|--------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------|
+| G1        | first period grade (numeric: from 0 to 20)                                                       | We want to predict G3, so previous grades might be an indicator to future grades.                                       |
+| G2        | second period grade (numeric: from 0 to 20)                                                      | We want to predict G3, so previous grades might be an indicator to future grades.                                       |
+| studytime | weekly study time (numeric: 1 - <2 hours, 2 - 2 to 5 hours, 3 - 5 to 10 hours, or 4 - >10 hours) | It is commonly known that there is a positive correlation between the amount of time studying and academic performance. |
+| absences  | number of school absences (numeric: from 0 to 93)                                                | Based on lived experience, we believe that students who have less absences may have better academic performance.        |
+| failures  | number of past class failures (numeric: n if 1<=n<3, else 4)                                     | Based on lived experience, we believe that students who have less failures may have better academic performance.        |
+
+Our retrained model performs better than the baseline model. Here is the score comparison from the previous model and our new model:
+
+|                | f1 score | accuracy | recall score | precision score |
+|----------------|:--------:|:--------:|:------------:|:---------------:|
+| Original Model |  0.5517  |  0.8684  |    0.4384    |      0.7442     |
+|  Our New Model |  0.9577  |  0.9848  |    0.9315    |      0.9855     |
+
 Please consult the [homework assignment](https://cmu-313.github.io//assignments/hw4) for additional context and instructions for this code.
 
 ## pipenv
