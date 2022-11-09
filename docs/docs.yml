@@ -83,6 +83,8 @@ paths:
                 $ref: '#/components/schemas/Predict'
         '500':
           description: Internal Server Error
+        '400':
+          description: Invalid parameters
         '404':
           description: Values not found
 components:
